@@ -1,9 +1,14 @@
+import os
 from flask import Flask
-from app import db
+from . import db
+
+app = Flask(__name__)
+app.config.update(dict(
+    DATABASE=os.path.join(app.root_path, 'cpsc304.db'),
+    SECRET_KEY='DEVKEY',
+    USERNAME='admin',
+    PASSWORD='default'
+))
+db.init_app(app)
+
 from app import routes
-
-def create_app():
-    app = Flask(__name__)
-    db.init_app(app)
-
-    return app
