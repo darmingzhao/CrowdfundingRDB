@@ -13,7 +13,7 @@ source venv/bin/activate
 
 ### Run server:
 ```
-export FLASK_APP=run.py
+export FLASK_APP=app
 flask run
 ```
 
