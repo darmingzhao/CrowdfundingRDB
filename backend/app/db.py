@@ -27,13 +27,16 @@ def init_db():
 
     with current_app.open_resource('DDL/schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
+        click.echo('Database and schema initialized')
+    with current_app.open_resource('DDL/insert.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+        click.echo('Dummy data inserted')
 
 
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
     init_db()
-    click.echo('Database and schema initialized')
 
 def init_app(app):
     app.teardown_appcontext(close_db)

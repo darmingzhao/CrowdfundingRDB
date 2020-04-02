@@ -18,6 +18,7 @@ CREATE TABLE Project (
   Title CHAR(100),
   StartDate DATE,
   Goal INTEGER,
+  Description CHAR(300),
   FOREIGN KEY(OrganizerEmail) REFERENCES Organizer2(OrganizerEmail) ON DELETE CASCADE
 );
 CREATE TABLE FinishedProject (
@@ -95,6 +96,7 @@ CREATE TABLE Donation(
 CREATE TABLE Reward(
   RewardID INTEGER PRIMARY KEY,
   ProjectID INTEGER NOT NULL,
+  Amount INTEGER NOT NULL,
   Description CHAR(30),
   Tier CHAR(10),
   FOREIGN KEY (ProjectID) REFERENCES Project
