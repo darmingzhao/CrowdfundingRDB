@@ -1,3 +1,6 @@
-app/env
-app/__pycache__
-*.db
+# Python
+**/venv
+**/__pycache__
+
+# SQLite
+*.sqlite

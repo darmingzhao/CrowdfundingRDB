@@ -1,9 +1,5 @@
-# Python
-*/venv
-__pycache__/
-
-# SQLite
-*.sqlite
-
 # Vim
 tags
+
+# Misc
+.DS_Store

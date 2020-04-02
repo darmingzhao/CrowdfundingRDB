@@ -11,6 +11,11 @@
 source venv/bin/activate
 ```
 
+### Initialize Database
+```
+flask init-db
+```
+
 ### Run server:
 ```
 export FLASK_APP=app
