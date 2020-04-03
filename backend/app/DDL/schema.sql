@@ -21,16 +21,19 @@ CREATE TABLE Project (
   Description CHAR(300),
   FOREIGN KEY(OrganizerEmail) REFERENCES Organizer2(OrganizerEmail) ON DELETE CASCADE
 );
+
 CREATE TABLE FinishedProject (
   ProjectID INTEGER PRIMARY KEY,
   EndDate DATE,
   FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE
 );
+
 CREATE TABLE OngoingProject (
   ProjectID INTEGER PRIMARY KEY,
   NumInvestors INTEGER,
   FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE
 );
+
 CREATE TABLE Organization (
   CompanyName CHAR(30) PRIMARY KEY,
   Description CHAR(300)
@@ -43,6 +46,7 @@ CREATE TABLE Owns (
   FOREIGN KEY (CompanyName) REFERENCES Organization(CompanyName) ON DELETE CASCADE,
   FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE
 );
+
 CREATE TABLE StatusUpdate(
   UpdateNum INTEGER,
   ProjectID INTEGER NOT NULL,
@@ -51,22 +55,26 @@ CREATE TABLE StatusUpdate(
   PRIMARY KEY(UpdateNum, ProjectID),
   FOREIGN KEY(ProjectID) REFERENCES Project ON DELETE CASCADE
 );
+
 CREATE TABLE OrganizerPhone(
   Phone CHAR(11) PRIMARY KEY,
   CompanyName CHAR(20),
   Address CHAR(30),
   FOREIGN KEY (CompanyName) REFERENCES Organization
 );
+
 CREATE TABLE OrganizerInfo(
   OrganizerEmail CHAR(30) PRIMARY KEY,
   Name CHAR(20),
   Phone CHAR(11),
   Role CHAR(20)
 );
+
 CREATE TABLE InvestorPersonalInfo(
   CreditCardNum CHAR(16) PRIMARY KEY,
   Name CHAR(30)
 );
+
 CREATE TABLE Investor(
   InvestorUsername CHAR(20) PRIMARY KEY,
   Password CHAR(20),
@@ -83,6 +91,7 @@ CREATE TABLE Message(
   FOREIGN KEY(OrganizerEmail) REFERENCES OrganizerInfo ON DELETE CASCADE,
   FOREIGN KEY(InvestorUsername) REFERENCES Investor2 ON DELETE CASCADE
 );
+
 CREATE TABLE Donation(
   TransactionID INTEGER PRIMARY KEY,
   InvestorUsername CHAR(20) NOT NULL,
@@ -93,6 +102,7 @@ CREATE TABLE Donation(
   FOREIGN KEY (InvestorUsername) REFERENCES Investor2,
   FOREIGN KEY (ProjectID) REFERENCES OngoingProject
 );
+
 CREATE TABLE Reward(
   RewardID INTEGER PRIMARY KEY,
   ProjectID INTEGER NOT NULL,

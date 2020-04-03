@@ -4,17 +4,19 @@ from . import api
 
 
 # Update Operation
-# TODO:
 @api.route('/project/ongoing', methods=['PUT'])
 def update_ongoing_project():
-    num = request.args.get('NumInvestors')
+    num = request.get_json()['NumInvestors']
 
     query = 'UPDATE OngoingProject \
       SET NumInvestors = NumInvestors + ?'
     args = [num]
     query_db(query, args)
 
-    return 200
+    resp = jsonify({})
+    resp.status_code = 200 
+
+    return resp
 
 
 # Selection Operation
