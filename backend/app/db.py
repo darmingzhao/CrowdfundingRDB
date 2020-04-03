@@ -48,5 +48,6 @@ def init_app(app):
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
+    res = [dict(zip([key[0] for key in cur.description], row)) for row in rv]
     cur.close()
-    return (rv[0] if rv else None) if one else rv
+    return (res[0] if res else None) if one else res

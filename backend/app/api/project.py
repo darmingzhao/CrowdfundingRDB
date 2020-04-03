@@ -1,16 +1,18 @@
 from flask import jsonify, request
+from ..db import query_db
 from . import api
-from .. import db
 
 
 # Update Operation
+# TODO:
 @api.route('/project/ongoing', methods=['PUT'])
 def update_ongoing_project():
     num = request.args.get('NumInvestors')
 
     query = 'UPDATE OngoingProject \
-      SET NumInvestors = NumInvestors + ' + num
-    query_db(query)
+      SET NumInvestors = NumInvestors + ?'
+    args = [num]
+    query_db(query, args)
 
     return 200
 
@@ -18,11 +20,15 @@ def update_ongoing_project():
 # Selection Operation
 @api.route('/project/ongoing', methods=['GET'])
 def get_ongoing_details():
-    num = request.args.get('NumInvestors')
+    num = request.get_json()['NumInvestors']
     
     query = 'SELECT * \
       FROM OngoingProject \
-      WHERE NumInvestors >= + ' + num
-    query_db(query)
+      WHERE NumInvestors >= + ?'
+    args = [num]
+    result = query_db(query, args)
 
-    return 200
+    resp = jsonify({'projects': result})
+    resp.status_code = 200
+
+    return resp

@@ -1,11 +1,12 @@
+import datetime
+
 from flask import jsonify, request
 from . import api
 from .. import db
 
-import datetime
-
 
 # Insert Operation
+# TODO
 @api.route('/donation/', methods=['POST'])
 def add_donation():
     username = request.args.get('InvestorUsername')
@@ -15,8 +16,9 @@ def add_donation():
     date = datetime.datetime.now().date()
 
     query = 'INSERT \
-      INTO donation \
-      VALUES(' + username + ','+ project + ',' + amount + ',' + message + ',' + date + ')'
-    query_db(query)
+      INTO Donation(InvestorUsername, ProjectID, Amount, Message, Date) \
+      VALUES(?, ?, ?, ?, ?)'
+    args = [(username, project, amount, message, date)]
+    query_db(query, args)
 
     return 200
