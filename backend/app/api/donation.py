@@ -1,8 +1,8 @@
+import datetime
+
 from flask import jsonify, request
 from . import api
 from .. import db
-
-import datetime
 
 
 # Insert Operation

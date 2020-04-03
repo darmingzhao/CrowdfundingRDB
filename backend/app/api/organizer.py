@@ -1,12 +1,11 @@
-from flask import jsonify, request
+from flask import abort, jsonify, request
 from ..db import query_db
-from .errors import bad_request
 from . import api
 
 
 # Delete Operation
 # TODO:
-@api.route('/organizer', methods=['DELETE'])
+@api.route('/organizer/', methods=['DELETE'])
 def delete_organizer():
     email = request.args.get('OrganizerEmail')
 
@@ -32,7 +31,7 @@ def get_organizer_details():
     elif select == 3:
         query = 'SELECT Phone FROM OrganizerInfo'
     else:
-        return bad_request('Invalid Selection') 
+        abort(400, 'Invalid Selection')
     result = query_db(query)
 
     resp = jsonify({'details': result})
@@ -42,7 +41,7 @@ def get_organizer_details():
 
 
 # Aggregation Operation
-@api.route('/organizer', methods=['GET'])
+@api.route('/organizer/', methods=['GET'])
 def get_num_organizers():
     query = 'SELECT COUNT(*) AS Count FROM OrganizerInfo'
     count = query_db(query, one=True)

@@ -22,7 +22,8 @@ def update_ongoing_project():
 def get_ongoing_details():
     num = request.get_json()['NumInvestors']
     
-    query = 'SELECT * FROM OngoingProject \
+    query = 'SELECT * \
+      FROM OngoingProject \
       WHERE NumInvestors >= + ?'
     args = [num]
     result = query_db(query, args)

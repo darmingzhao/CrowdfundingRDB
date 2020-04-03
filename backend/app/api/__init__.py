@@ -2,4 +2,4 @@ from flask import Blueprint
 
 api = Blueprint('api', __name__)
 
-from . import donation, errors, investor, organizer, project, test
+from . import donation, investor, organizer, project, test
