@@ -12,34 +12,62 @@ DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Donation;
 DROP TABLE IF EXISTS Reward;
 
-CREATE TABLE Project (
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE Organization(
+  CompanyName CHAR(30) PRIMARY KEY,
+  Description CHAR(300)
+);
+
+CREATE TABLE OrganizerInfo(
+  OrganizerEmail CHAR(30) PRIMARY KEY,
+  Name CHAR(20),
+  Phone CHAR(11),
+  Role CHAR(20)
+);
+
+CREATE TABLE OrganizerPhone(
+  Phone CHAR(11) PRIMARY KEY,
+  CompanyName CHAR(20),
+  Address CHAR(30),
+  FOREIGN KEY (CompanyName) REFERENCES Organization(CompanyName)
+);
+
+CREATE TABLE InvestorPersonalInfo(
+  CreditCardNum CHAR(16) PRIMARY KEY,
+  Name CHAR(30)
+);
+
+CREATE TABLE Investor(
+  InvestorUsername CHAR(20) PRIMARY KEY,
+  Password CHAR(20),
+  CreditCardNum CHAR(16) NOT NULL,
+  FOREIGN KEY (CreditCardNum) REFERENCES InvestorPersonalInfo(CreditCardNum)
+);
+
+CREATE TABLE Project(
   ProjectID INTEGER PRIMARY KEY,
   OrganizerEmail CHAR(40) NOT NULL,
   Title CHAR(100),
   StartDate DATE,
   Goal INTEGER,
   Description CHAR(300),
-  FOREIGN KEY(OrganizerEmail) REFERENCES Organizer2(OrganizerEmail) ON DELETE CASCADE
+  FOREIGN KEY(OrganizerEmail) REFERENCES OrganizerInfo(OrganizerEmail) ON DELETE CASCADE
 );
 
-CREATE TABLE FinishedProject (
+CREATE TABLE FinishedProject(
   ProjectID INTEGER PRIMARY KEY,
   EndDate DATE,
   FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE
 );
 
-CREATE TABLE OngoingProject (
+CREATE TABLE OngoingProject(
   ProjectID INTEGER PRIMARY KEY,
   NumInvestors INTEGER,
   FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE
 );
 
-CREATE TABLE Organization (
-  CompanyName CHAR(30) PRIMARY KEY,
-  Description CHAR(300)
-);
-
-CREATE TABLE Owns (
+CREATE TABLE Owns(
   CompanyName CHAR(30),
   ProjectID INTEGER,
   Relationship CHAR(30),
@@ -54,33 +82,7 @@ CREATE TABLE StatusUpdate(
   DatePosted Date,
   Description CHAR(30),
   PRIMARY KEY(UpdateNum, ProjectID),
-  FOREIGN KEY(ProjectID) REFERENCES Project ON DELETE CASCADE
-);
-
-CREATE TABLE OrganizerPhone(
-  Phone CHAR(11) PRIMARY KEY,
-  CompanyName CHAR(20),
-  Address CHAR(30),
-  FOREIGN KEY (CompanyName) REFERENCES Organization
-);
-
-CREATE TABLE OrganizerInfo(
-  OrganizerEmail CHAR(30) PRIMARY KEY,
-  Name CHAR(20),
-  Phone CHAR(11),
-  Role CHAR(20)
-);
-
-CREATE TABLE InvestorPersonalInfo(
-  CreditCardNum CHAR(16) PRIMARY KEY,
-  Name CHAR(30)
-);
-
-CREATE TABLE Investor(
-  InvestorUsername CHAR(20) PRIMARY KEY,
-  Password CHAR(20),
-  CreditCardNum CHAR(16) NOT NULL,
-  FOREIGN KEY (CreditCardNum) REFERENCES Investor1
+  FOREIGN KEY(ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE
 );
 
 CREATE TABLE Message(
@@ -90,8 +92,8 @@ CREATE TABLE Message(
   Subject CHAR(100),
   Content CHAR(300),
   MessageDate DATE,
-  FOREIGN KEY(OrganizerEmail) REFERENCES OrganizerInfo ON DELETE CASCADE,
-  FOREIGN KEY(InvestorUsername) REFERENCES Investor2 ON DELETE CASCADE
+  FOREIGN KEY(OrganizerEmail) REFERENCES OrganizerInfo(OrganizerEmail) ON DELETE CASCADE,
+  FOREIGN KEY(InvestorUsername) REFERENCES Investor(InvestorUsername) ON DELETE CASCADE
 );
 
 CREATE TABLE Donation(
@@ -101,8 +103,8 @@ CREATE TABLE Donation(
   Amount INTEGER,
   Message CHAR(40),
   DonationDate DATE,
-  FOREIGN KEY (InvestorUsername) REFERENCES Investor2,
-  FOREIGN KEY (ProjectID) REFERENCES OngoingProject
+  FOREIGN KEY (InvestorUsername) REFERENCES Investor(InvestorUsername),
+  FOREIGN KEY (ProjectID) REFERENCES OngoingProject(ProjectID)
 );
 
 CREATE TABLE Reward(
@@ -111,5 +113,5 @@ CREATE TABLE Reward(
   Amount INTEGER NOT NULL,
   Description CHAR(30),
   Tier CHAR(10),
-  FOREIGN KEY (ProjectID) REFERENCES Project
+  FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
 );

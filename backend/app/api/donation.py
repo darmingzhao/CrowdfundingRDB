@@ -10,7 +10,6 @@ from . import api
 def add_donation():
     req = request.get_json()
     username = req['InvestorUsername']
-    # TODO: ProjectID refers to non-existent project?
     project = req['ProjectID']
     amount = req['Amount']
     message = req['Message']
