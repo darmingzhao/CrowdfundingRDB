@@ -38,6 +38,7 @@ CREATE TABLE Organization (
   CompanyName CHAR(30) PRIMARY KEY,
   Description CHAR(300)
 );
+
 CREATE TABLE Owns (
   CompanyName CHAR(30),
   ProjectID INTEGER,
@@ -81,6 +82,7 @@ CREATE TABLE Investor(
   CreditCardNum CHAR(16) NOT NULL,
   FOREIGN KEY (CreditCardNum) REFERENCES Investor1
 );
+
 CREATE TABLE Message(
   MessageID INTEGER PRIMARY KEY,
   OrganizerEmail CHAR(30) NOT NULL,

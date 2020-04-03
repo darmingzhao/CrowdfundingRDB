@@ -8,12 +8,17 @@ from . import api
 def update_ongoing_project():
     num = request.get_json()['NumInvestors']
 
-    query = 'UPDATE OngoingProject \
+    res_query = 'SELECT * FROM OngoingProject'
+    before = query_db(res_query)
+
+    update_query = 'UPDATE OngoingProject \
       SET NumInvestors = NumInvestors + ?'
     args = [num]
-    query_db(query, args)
+    query_db(update_query, args)
 
-    resp = jsonify({})
+    after = query_db(res_query)
+
+    resp = jsonify({'Before': before, 'After': after})
     resp.status_code = 200 
 
     return resp

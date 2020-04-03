@@ -8,13 +8,18 @@ from . import api
 def delete_organizer():
     email = request.get_json()['OrganizerEmail']
 
-    query = 'DELETE \
+    res_query = 'SELECT * FROM OrganizerInfo'
+    before = query_db(res_query)
+
+    delete_query = 'DELETE \
       FROM OrganizerInfo\
       WHERE OrganizerEmail = ?'
     args = [email]
-    query_db(query, args)
+    query_db(delete_query, args)
 
-    resp = jsonify({})
+    after = query_db(res_query)
+
+    resp = jsonify({'Before': before, 'After': after})
     resp.status_code = 200
 
     return resp
