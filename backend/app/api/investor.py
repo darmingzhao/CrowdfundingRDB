@@ -1,24 +1,30 @@
 from flask import jsonify, request
+from ..db import query_db
 from . import api
-from .. import db
 
 
 # Join Operation
 @api.route('/investor/donations', methods=['GET'])
 def get_donated_projects():
-    username = request.args.get('InvestorUsername')
+    username = request.get_json()['InvestorUsername']
 
     query = 'SELECT P.Title \
       FROM Project P, Donation D \
-      WHERE P.ProjectId = D.ProjectId AND D.InvestorUsername = ' + username
-    query_db(query)
+      WHERE P.ProjectId = D.ProjectId AND D.InvestorUsername = ?'
+    args = [username]
+    result = query_db(query, args)
 
-    return 200
+    resp = jsonify({'Projects': result})
+    resp.status_code = 200
+
+    return resp
 
 
 # Nested Aggregation with Group-By Operation
+# TODO:
 @api.route('/investor/maximum', methods=['GET'])
 def get_max_donated():
+    # TODO: Put this in insert.sql?
     query_view = 'CREATE VIEW TotalDonatedPerInvestor(InvestorUsername, Total) as \
 	  SELECT D.InvestorUsername, SUM(D.Amount) AS Total \
 	  FROM Donation D \
@@ -28,9 +34,12 @@ def get_max_donated():
     query_select = 'SELECT InvestorUsername, Total \
       FROM TotalDonatedPerInvestor \
       WHERE Total = (SELECT MAX(Total) FROM TotalDonatedPerInvestor)'
-    query_db(query_select)
+    result = query_db(query_select, one=True)
 
-    return 200
+    resp = jsonify({'TopDonation': result})
+    resp.stauts_code = 200
+
+    return resp
 
 
 # Division Operation
@@ -39,13 +48,16 @@ def get_all_donated():
     query = 'SELECT I.InvestorUsername \
       FROM Investor I \
       WHERE NOT EXISTS( \
-	    SELECT P.ProjectID \
+	      SELECT P.ProjectID \
         FROM Project P \
-	    EXCEPT \
-	    SELECT D.ProjectID \
-	    FROM Donation D \
-	    WHERE D.InvestorUsername = I.InvestorUsername \
+	      EXCEPT \
+	      SELECT D.ProjectID \
+	      FROM Donation D \
+	      WHERE D.InvestorUsername = I.InvestorUsername \
       )'
-    query_db(query)
+    result = query_db(query)
 
-    return 200
+    resp = jsonify({'Investors': result})
+    resp.status_code = 200
+
+    return resp

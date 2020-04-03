@@ -1,17 +1,20 @@
 from flask import jsonify, request
+from ..db import query_db
+from .errors import bad_request
 from . import api
-from .. import db
 
 
 # Delete Operation
+# TODO:
 @api.route('/organizer', methods=['DELETE'])
 def delete_organizer():
     email = request.args.get('OrganizerEmail')
 
     query = 'DELETE \
       FROM OrganizerInfo\
-      WHERE OrganizerEmail = ' + email
-    query_db(query)
+      WHERE OrganizerEmail = ?'
+    args = [email]
+    query_db(query, args)
 
     return 200
 
@@ -19,21 +22,32 @@ def delete_organizer():
 # Projection Operation
 @api.route('/organizer/details', methods=['GET'])
 def get_organizer_details():
-    email = request.args.get('OrganizerEmail')
-    name = request.args.get('Name')
-    phone = request.args.get('Phone')
+    select = request.get_json()['Select']
 
-    query = 'SELECT ' + email + ',' + name + ',' + phone + ' \
-      FROM OrganizerInfo'
-    query_db(query)
+    query = None
+    if select == 1:
+        query = 'SELECT OrganizerEmail FROM OrganizerInfo'
+    elif select == 2:
+        query = 'SELECT Name FROM OrganizerInfo'
+    elif select == 3:
+        query = 'SELECT Phone FROM OrganizerInfo'
+    else:
+        return bad_request('Invalid Selection') 
+    result = query_db(query)
 
-    return 200
+    resp = jsonify({'details': result})
+    resp.status_code = 200
+
+    return resp
 
 
 # Aggregation Operation
 @api.route('/organizer', methods=['GET'])
 def get_num_organizers():
-    query = 'SELECT COUNT(*) FROM OrganizerInfo'
-    query_db(query)
+    query = 'SELECT COUNT(*) AS Count FROM OrganizerInfo'
+    count = query_db(query, one=True)
 
-    return 200
+    resp = jsonify({'organizers': count})
+    resp.status_code = 200
+
+    return resp
