@@ -15,7 +15,11 @@ def delete_organizer():
       FROM OrganizerInfo\
       WHERE OrganizerEmail = ?'
     args = [email]
-    query_db(delete_query, args)
+
+    try:
+        query_db(delete_query, args)
+    except:
+        abort(400)
 
     after = query_db(res_query)
 
@@ -39,7 +43,11 @@ def get_organizer_details():
         query = 'SELECT Phone FROM OrganizerInfo'
     else:
         abort(400, 'Invalid Selection')
-    result = query_db(query)
+
+    try:
+        result = query_db(query)
+    except:
+        abort(400)
 
     resp = jsonify({'details': result})
     resp.status_code = 200

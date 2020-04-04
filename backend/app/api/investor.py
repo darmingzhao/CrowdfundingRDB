@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
 
@@ -12,7 +12,11 @@ def get_donated_projects():
       FROM Project P, Donation D \
       WHERE P.ProjectId = D.ProjectId AND D.InvestorUsername = ?'
     args = [username]
-    result = query_db(query, args)
+
+    try:
+      result = query_db(query, args)
+    except:
+      abort(400)
 
     resp = jsonify({'Projects': result})
     resp.status_code = 200

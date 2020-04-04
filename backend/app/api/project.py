@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
 
@@ -14,7 +14,11 @@ def update_ongoing_project():
     update_query = 'UPDATE OngoingProject \
       SET NumInvestors = NumInvestors + ?'
     args = [num]
-    query_db(update_query, args)
+
+    try:
+      query_db(update_query, args)
+    except:
+      abort(400)
 
     after = query_db(res_query)
 
@@ -33,7 +37,11 @@ def get_ongoing_details():
       FROM OngoingProject \
       WHERE NumInvestors >= + ?'
     args = [num]
-    result = query_db(query, args)
+
+    try:
+      result = query_db(query, args)
+    except:
+      abort(400)
 
     resp = jsonify({'projects': result})
     resp.status_code = 200
