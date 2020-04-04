@@ -29,8 +29,7 @@ def add_donation():
       abort(400)
 
     after = query_db(res_query)
-
-    resp = jsonify({'Before': before, 'After': after})
+    resp = jsonify({'before': before, 'after': after})
     resp.status_code = 201
 
     return resp

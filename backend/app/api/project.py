@@ -21,8 +21,7 @@ def update_ongoing_project():
       abort(400)
 
     after = query_db(res_query)
-
-    resp = jsonify({'Before': before, 'After': after})
+    resp = jsonify({'before': before, 'after': after})
     resp.status_code = 200 
 
     return resp
