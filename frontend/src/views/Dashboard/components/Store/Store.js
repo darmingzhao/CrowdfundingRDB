@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import MoneyIcon from '@material-ui/icons/Money';
+import { Button, Dialog, DialogTitle, DialogContent, 
+  DialogContentText, DialogActions, Card, CardContent, Grid, Typography, TextField } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,10 +21,6 @@ const useStyles = makeStyles(theme => ({
     height: 56,
     width: 56
   },
-  icon: {
-    height: 32,
-    width: 32
-  },
   difference: {
     marginTop: theme.spacing(2),
     display: 'flex',
@@ -41,9 +37,17 @@ const useStyles = makeStyles(theme => ({
 
 const Store = props => {
   const { className, ...rest } = props;
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
 
   const classes = useStyles();
-
   return (
     <Card
       {...rest}
@@ -62,12 +66,12 @@ const Store = props => {
               variant="body2"
             >
             </Typography>
-            <Typography variant="h3">$24,000</Typography>
+            <Typography variant="h2">{props.name}</Typography>
+            <Typography>email@gmail.com</Typography>
           </Grid>
           <Grid item>
-            <Avatar className={classes.avatar}>
-              <MoneyIcon className={classes.icon} />
-            </Avatar>
+            <Typography variant="h3" align="right">Amount Desired</Typography>
+            <Typography align="right">{props.numInvestors} investors </Typography>
           </Grid>
         </Grid>
         <div className={classes.difference}>
@@ -75,10 +79,37 @@ const Store = props => {
             className={classes.caption}
             variant="caption"
           >
-            Since last month
+            {props.description}
           </Typography>
+          <Grid>
+            <Button color="primary" onClick={handleClickOpen}>Donate</Button>
+          </Grid>
         </div>
       </CardContent>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title"><h1> Donation towards '{props.name}'</h1></DialogTitle>
+        <DialogContent>
+          <DialogContentText align="center">
+            {props.description}
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="donation"
+            label="Enter a donation amount in dollars"
+            type="number"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            Donate
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };
