@@ -1,24 +1,36 @@
 import datetime
 
-from flask import jsonify, request
+from flask import abort, jsonify, request
+from ..db import query_db
 from . import api
-from .. import db
 
 
 # Insert Operation
-# TODO
 @api.route('/donation/', methods=['POST'])
 def add_donation():
-    username = request.args.get('InvestorUsername')
-    project = request.args.get('ProjectId')
-    amount = request.args.get('Amount')
-    message = request.args.get('Message')
+    req = request.get_json()
+    username = req['InvestorUsername']
+    project = req['ProjectID']
+    amount = req['Amount']
+    message = req['Message']
     date = datetime.datetime.now().date()
 
-    query = 'INSERT \
-      INTO Donation(InvestorUsername, ProjectID, Amount, Message, Date) \
-      VALUES(?, ?, ?, ?, ?)'
-    args = [(username, project, amount, message, date)]
-    query_db(query, args)
+    res_query = 'SELECT * FROM Donation'
+    before = query_db(res_query)
 
-    return 200
+    insert_query = 'INSERT \
+      INTO Donation(InvestorUsername, ProjectID, Amount, Message, DonationDate) \
+      VALUES(?, ?, ?, ?, ?)'
+    args = [username, project, amount, message, date]
+
+    try:
+      query_db(insert_query, args)
+    except:
+      abort(400)
+
+    after = query_db(res_query)
+
+    resp = jsonify({'Before': before, 'After': after})
+    resp.status_code = 201
+
+    return resp

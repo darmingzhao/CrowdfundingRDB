@@ -28,10 +28,13 @@ def init_db():
 
     with current_app.open_resource('DDL/schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
-        click.echo('Database and schema initialized')
+        click.echo('Database and Schema Initialized...')
     with current_app.open_resource('DDL/insert.sql') as f:
         db.executescript(f.read().decode('utf8'))
-        click.echo('Dummy data inserted')
+        click.echo('Dummy Data Inserted...')
+    with current_app.open_resource('DDL/views.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+        click.echo('Views Created...')
 
 
 @click.command('init-db')
@@ -46,8 +49,10 @@ def init_app(app):
 
 
 def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
+    db = get_db()
+    db.execute('PRAGMA foreign_keys = ON')
+    cur = db.execute(query, args)
     rv = cur.fetchall()
     res = [dict(zip([key[0] for key in cur.description], row)) for row in rv]
     cur.close()
-    return (res[0] if res else None) if one else res
+    return (res[0] if res else []) if one else res

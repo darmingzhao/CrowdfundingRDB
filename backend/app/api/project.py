@@ -1,20 +1,31 @@
-from flask import jsonify, request
+from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
 
 
 # Update Operation
-# TODO:
 @api.route('/project/ongoing', methods=['PUT'])
 def update_ongoing_project():
-    num = request.args.get('NumInvestors')
+    num = request.get_json()['NumInvestors']
 
-    query = 'UPDATE OngoingProject \
+    res_query = 'SELECT * FROM OngoingProject'
+    before = query_db(res_query)
+
+    update_query = 'UPDATE OngoingProject \
       SET NumInvestors = NumInvestors + ?'
     args = [num]
-    query_db(query, args)
 
-    return 200
+    try:
+      query_db(update_query, args)
+    except:
+      abort(400)
+
+    after = query_db(res_query)
+
+    resp = jsonify({'Before': before, 'After': after})
+    resp.status_code = 200 
+
+    return resp
 
 
 # Selection Operation
@@ -26,7 +37,11 @@ def get_ongoing_details():
       FROM OngoingProject \
       WHERE NumInvestors >= + ?'
     args = [num]
-    result = query_db(query, args)
+
+    try:
+      result = query_db(query, args)
+    except:
+      abort(400)
 
     resp = jsonify({'projects': result})
     resp.status_code = 200

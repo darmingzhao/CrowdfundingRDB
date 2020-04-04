@@ -4,18 +4,29 @@ from . import api
 
 
 # Delete Operation
-# TODO:
 @api.route('/organizer/', methods=['DELETE'])
 def delete_organizer():
-    email = request.args.get('OrganizerEmail')
+    email = request.get_json()['OrganizerEmail']
 
-    query = 'DELETE \
+    res_query = 'SELECT * FROM OrganizerInfo'
+    before = query_db(res_query)
+
+    delete_query = 'DELETE \
       FROM OrganizerInfo\
       WHERE OrganizerEmail = ?'
     args = [email]
-    query_db(query, args)
 
-    return 200
+    try:
+        query_db(delete_query, args)
+    except:
+        abort(400)
+
+    after = query_db(res_query)
+
+    resp = jsonify({'Before': before, 'After': after})
+    resp.status_code = 200
+
+    return resp
 
 
 # Projection Operation
@@ -24,15 +35,19 @@ def get_organizer_details():
     select = request.get_json()['Select']
 
     query = None
-    if select == 1:
+    if select == 'OrganizerEmail':
         query = 'SELECT OrganizerEmail FROM OrganizerInfo'
-    elif select == 2:
+    elif select == 'Name':
         query = 'SELECT Name FROM OrganizerInfo'
-    elif select == 3:
+    elif select == 'Phone':
         query = 'SELECT Phone FROM OrganizerInfo'
     else:
         abort(400, 'Invalid Selection')
-    result = query_db(query)
+
+    try:
+        result = query_db(query)
+    except:
+        abort(400)
 
     resp = jsonify({'details': result})
     resp.status_code = 200

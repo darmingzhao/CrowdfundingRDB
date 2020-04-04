@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
 
@@ -12,7 +12,11 @@ def get_donated_projects():
       FROM Project P, Donation D \
       WHERE P.ProjectId = D.ProjectId AND D.InvestorUsername = ?'
     args = [username]
-    result = query_db(query, args)
+
+    try:
+      result = query_db(query, args)
+    except:
+      abort(400)
 
     resp = jsonify({'Projects': result})
     resp.status_code = 200
@@ -21,20 +25,12 @@ def get_donated_projects():
 
 
 # Nested Aggregation with Group-By Operation
-# TODO:
 @api.route('/investor/maximum', methods=['GET'])
 def get_max_donated():
-    # TODO: Put this in insert.sql?
-    query_view = 'CREATE VIEW TotalDonatedPerInvestor(InvestorUsername, Total) as \
-	  SELECT D.InvestorUsername, SUM(D.Amount) AS Total \
-	  FROM Donation D \
-	  GROUP BY D.InvestorUsername'
-    query_db(query_view)
-    
-    query_select = 'SELECT InvestorUsername, Total \
+    query = 'SELECT InvestorUsername, Total \
       FROM TotalDonatedPerInvestor \
       WHERE Total = (SELECT MAX(Total) FROM TotalDonatedPerInvestor)'
-    result = query_db(query_select, one=True)
+    result = query_db(query, one=True)
 
     resp = jsonify({'TopDonation': result})
     resp.stauts_code = 200
