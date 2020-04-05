@@ -43,7 +43,7 @@ CREATE TABLE Investor(
   InvestorUsername CHAR(20) PRIMARY KEY,
   Password CHAR(20),
   CreditCardNum CHAR(16) NOT NULL,
-  FOREIGN KEY (CreditCardNum) REFERENCES InvestorPersonalInfo(CreditCardNum) ON DELETE SET NULL
+  FOREIGN KEY (CreditCardNum) REFERENCES InvestorPersonalInfo(CreditCardNum) ON DELETE CASCADE
 );
 
 CREATE TABLE Project(
@@ -104,8 +104,8 @@ CREATE TABLE Donation(
   Amount INTEGER,
   Message CHAR(40),
   DonationDate DATE,
-  FOREIGN KEY (InvestorUsername) REFERENCES Investor(InvestorUsername) ON DELETE SET NULL,
-  FOREIGN KEY (ProjectID) REFERENCES OngoingProject(ProjectID) ON DELETE SET NULL
+  FOREIGN KEY (InvestorUsername) REFERENCES Investor(InvestorUsername) ON DELETE CASCADE,
+  FOREIGN KEY (ProjectID) REFERENCES OngoingProject(ProjectID) ON DELETE CASCADE
 );
 
 CREATE TABLE Reward(
