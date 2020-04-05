@@ -66,12 +66,12 @@ const Store = props => {
               variant="body2"
             >
             </Typography>
-            <Typography variant="h2">{props.name}</Typography>
-            <Typography>email@gmail.com</Typography>
+            <Typography variant="h2">{props.title}</Typography>
+            <Typography>{props.organizer_email}</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="h3" align="right">Amount Desired</Typography>
-            <Typography align="right">{props.numInvestors} investors </Typography>
+            <Typography variant="h3" align="right">${props.goal}</Typography>
+            <Typography align="right">{props.num_investors} investors </Typography>
           </Grid>
         </Grid>
         <div className={classes.difference}>
@@ -87,16 +87,26 @@ const Store = props => {
         </div>
       </CardContent>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title"><h1> Donation towards '{props.name}'</h1></DialogTitle>
-        <DialogContent>
+        <DialogTitle id="form-dialog-title"><h1> Donation towards '{props.title}'</h1></DialogTitle>
+        <DialogContent justify="center">
           <DialogContentText align="center">
             {props.description}
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
+            id="message"
+            label="Message to the project organizer"
+            variant="outlined"
+            height="200px"
+            multiline={true}
+            fullWidth
+          />
+          <TextField
+            autoFocus
+            margin="dense"
             id="donation"
-            label="Enter a donation amount in dollars"
+            label="Donation amount"
             type="number"
             fullWidth
           />
