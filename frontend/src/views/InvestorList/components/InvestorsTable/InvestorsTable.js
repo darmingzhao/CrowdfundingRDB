@@ -38,6 +38,9 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     justifyContent: 'flex-end'
+  },
+  select: {
+    width: '50%'
   }
 }));
 
@@ -146,7 +149,7 @@ const InvestorsTable = props => {
         <Card {...rest}
           className={clsx(classes.root, className)}>
             <CardContent justify="center" align="center">
-              <FormControl className={classes.formControl}>
+              <FormControl>
                 <InputLabel id="investor">Select Investor</InputLabel>
                 <Select
                   labelId="investor"
@@ -174,7 +177,7 @@ const InvestorsTable = props => {
             <CardContent align="center" justify="center">
                 <Typography variant="h2">{(() => {
                 if (chosenInvestor !== 'Select Investor') {
-                  return `Projects donated to by ${chosenInvestor}`
+                  return `Project Donations From ${chosenInvestor}`
                 } else {
                   return 'Select Investor'
                 }
