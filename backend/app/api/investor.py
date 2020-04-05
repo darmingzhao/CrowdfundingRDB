@@ -1,3 +1,5 @@
+import traceback
+
 from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
@@ -15,7 +17,8 @@ def get_donated_projects():
 
     try:
       result = query_db(query, args)
-    except:
+    except Exception:
+      traceback.print_exc()
       abort(400)
 
     resp = jsonify({'Projects': result})

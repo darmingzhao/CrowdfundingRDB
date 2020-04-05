@@ -1,3 +1,5 @@
+import traceback
+
 from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
@@ -12,13 +14,14 @@ def delete_organizer():
     before = query_db(res_query)
 
     delete_query = 'DELETE \
-      FROM OrganizerInfo\
+      FROM OrganizerInfo \
       WHERE OrganizerEmail = ?'
     args = [email]
 
     try:
         query_db(delete_query, args)
-    except:
+    except Exception:
+        traceback.print_exc()
         abort(400)
 
     after = query_db(res_query)
@@ -45,7 +48,8 @@ def get_organizer_details():
 
     try:
         result = query_db(query)
-    except:
+    except Exception:
+        traceback.print_exc()
         abort(400)
 
     resp = jsonify({'details': result})

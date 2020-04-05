@@ -1,4 +1,5 @@
 import datetime
+import traceback
 
 from flask import abort, jsonify, request
 from ..db import query_db
@@ -25,7 +26,8 @@ def add_donation():
 
     try:
       query_db(insert_query, args)
-    except:
+    except Exception:
+      traceback.print_exc()
       abort(400)
 
     after = query_db(res_query)

@@ -1,3 +1,5 @@
+import traceback
+
 from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
@@ -17,7 +19,8 @@ def update_ongoing_project():
 
     try:
       query_db(update_query, args)
-    except:
+    except Exception:
+      traceback.print_exc()
       abort(400)
 
     after = query_db(res_query)
@@ -32,14 +35,15 @@ def update_ongoing_project():
 def get_ongoing_details():
     num = request.get_json()['NumInvestors']
     
-    query = 'SELECT * \
-      FROM OngoingProject \
-      WHERE NumInvestors >= + ?'
+    query = 'SELECT O.NumInvestors, O.ProjectID, P.OrganizerEmail, P.Title, P.Goal, P.Description \
+      FROM OngoingProject O, Project P \
+      WHERE O.ProjectID = P.ProjectID AND O.NumInvestors >= + ?'
     args = [num]
 
     try:
       result = query_db(query, args)
-    except:
+    except Exception:
+      traceback.print_exc()
       abort(400)
 
     resp = jsonify({'projects': result})

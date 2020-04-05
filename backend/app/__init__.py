@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_cors import CORS
 from . import db
 
 
@@ -11,6 +12,9 @@ def create_app(config_name):
         USERNAME='admin',
         PASSWORD='default'
     ))
+
+    cors = CORS(app)
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     db.init_app(app)
 
