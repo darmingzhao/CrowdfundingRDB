@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS Reward;
-DROP TABLE IF EXISTS Donation;
-DROP TABLE IF EXISTS Message;
-DROP TABLE IF EXISTS StatusUpdate;
-DROP TABLE IF EXISTS Owns;
-DROP TABLE IF EXISTS OngoingProject;
-DROP TABLE IF EXISTS FinishedProject;
 DROP TABLE IF EXISTS Project;
-DROP TABLE IF EXISTS Investor;
-DROP TABLE IF EXISTS InvestorPersonalInfo;
-DROP TABLE IF EXISTS OrganizerInfo;
-DROP TABLE IF EXISTS OrganizerPhone;
+DROP TABLE IF EXISTS FinishedProject;
+DROP TABLE IF EXISTS OngoingProject;
 DROP TABLE IF EXISTS Organization;
+DROP TABLE IF EXISTS Owns;
+DROP TABLE IF EXISTS StatusUpdate;
+DROP TABLE IF EXISTS OrganizerPhone;
+DROP TABLE IF EXISTS OrganizerInfo;
+DROP TABLE IF EXISTS InvestorPersonalInfo;
+DROP TABLE IF EXISTS Investor;
+DROP TABLE IF EXISTS Message;
+DROP TABLE IF EXISTS Donation;
+DROP TABLE IF EXISTS Reward;
 
 PRAGMA foreign_keys = ON;
 
@@ -19,19 +19,18 @@ CREATE TABLE Organization(
   Description CHAR(300)
 );
 
-CREATE TABLE OrganizerPhone(
-  Phone CHAR(11) PRIMARY KEY,
-  CompanyName CHAR(20),
-  Address CHAR(30),
-  FOREIGN KEY (CompanyName) REFERENCES Organization(CompanyName) ON DELETE CASCADE
-);
-
 CREATE TABLE OrganizerInfo(
   OrganizerEmail CHAR(30) PRIMARY KEY,
   Name CHAR(20),
   Phone CHAR(11),
-  Role CHAR(20),
-  FOREIGN KEY (Phone) REFERENCES OrganizerPhone(Phone) ON DELETE CASCADE
+  Role CHAR(20)
+);
+
+CREATE TABLE OrganizerPhone(
+  Phone CHAR(11) PRIMARY KEY,
+  CompanyName CHAR(20),
+  Address CHAR(30),
+  FOREIGN KEY (CompanyName) REFERENCES Organization(CompanyName)
 );
 
 CREATE TABLE InvestorPersonalInfo(
@@ -93,7 +92,7 @@ CREATE TABLE Message(
   Subject CHAR(100),
   Content CHAR(300),
   MessageDate DATE,
-  FOREIGN KEY(OrganizerEmail) REFERENCES OrganizerInfo(OrganizerEmail),
+  FOREIGN KEY(OrganizerEmail) REFERENCES OrganizerInfo(OrganizerEmail) ON DELETE CASCADE,
   FOREIGN KEY(InvestorUsername) REFERENCES Investor(InvestorUsername) ON DELETE CASCADE
 );
 

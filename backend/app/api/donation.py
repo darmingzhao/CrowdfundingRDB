@@ -1,5 +1,5 @@
 import datetime
-import time
+
 from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
@@ -18,16 +18,14 @@ def add_donation():
     res_query = 'SELECT * FROM Donation'
     before = query_db(res_query)
 
-    insert_query = "INSERT \
+    insert_query = 'INSERT \
       INTO Donation(InvestorUsername, ProjectID, Amount, Message, DonationDate) \
-      VALUES(?, ?, ?, ?, ?)"
+      VALUES(?, ?, ?, ?, ?)'
     args = [username, project, amount, message, date]
 
     try:
-      print(args)
       query_db(insert_query, args)
-    except Exception as e:
-      print(e)
+    except:
       abort(400)
 
     after = query_db(res_query)
