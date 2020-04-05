@@ -1,3 +1,5 @@
+import traceback
+
 from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
@@ -10,15 +12,16 @@ def delete_organizer():
 
     res_query = 'SELECT * FROM OrganizerInfo'
     before = query_db(res_query)
-    delete_organizer_query = """
-      DELETE
-      FROM OrganizerInfo
-      WHERE OrganizerEmail = ?;"""
+
+    delete_query = 'DELETE \
+      FROM OrganizerInfo \
+      WHERE OrganizerEmail = ?'
     args = [email]
 
     try:
-        query_db(delete_organizer_query, args)
-    except Exception as e:
+        query_db(delete_query, args)
+    except Exception:
+        traceback.print_exc()
         abort(400)
 
     after = query_db(res_query)
@@ -32,20 +35,20 @@ def delete_organizer():
 @api.route('/organizer/details', methods=['GET'])
 def get_organizer_details():
     select = request.args.get('Select')
-    print(select)
     query = None
-    if select == 'email':
+    if select == 'OrganizerEmail':
         query = 'SELECT OrganizerEmail FROM OrganizerInfo'
-    elif select == 'name':
+    elif select == 'Name':
         query = 'SELECT Name FROM OrganizerInfo'
-    elif select == 'phone':
+    elif select == 'Phone':
         query = 'SELECT Phone FROM OrganizerInfo'
     else:
         abort(400, 'Invalid Selection')
 
     try:
         result = query_db(query)
-    except:
+    except Exception:
+        traceback.print_exc()
         abort(400)
 
     resp = jsonify({'details': result})

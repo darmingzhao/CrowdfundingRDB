@@ -62,7 +62,7 @@ const Store = props => {
       console.error(err)
     })
   }
-
+  
   const messageHandler = (e) => {
     const val = e.target.value;
     setMessage(val);
