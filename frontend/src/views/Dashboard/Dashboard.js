@@ -125,7 +125,7 @@ const Dashboard = () => {
               lg={6}
               key={store.Title}
             >
-              <Store title={store.Title} description={store.Description} goal={store.Goal} num_investors={store.NumInvestors} organizer_email={store.OrganizerEmail} />
+              <Store title={store.Title} description={store.Description} goal={store.Goal} num_investors={store.NumInvestors} organizer_email={store.OrganizerEmail} project_id={store.ProjectID} />
             </Grid>)
           })}
       </Grid>

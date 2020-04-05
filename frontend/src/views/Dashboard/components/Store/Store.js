@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Button, Dialog, DialogTitle, DialogContent, 
@@ -38,15 +39,53 @@ const useStyles = makeStyles(theme => ({
 const Store = props => {
   const { className, ...rest } = props;
   const [open, setOpen] = useState(false);
-
+  const [message, setMessage] = useState('');
+  const [amount, setAmount] = useState(0);
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (value) => {
+  const handleClose = () => {
     setOpen(false);
   };
 
+  const donateHandler = () => {
+    axios.post('/donation/', {
+      InvestorUsername: 'investorsun',
+      ProjectID: props.project_id,
+      Amount: amount,
+      Message: message
+    })
+    .then(() => handleClose())
+    .catch(err => {
+      handleClose()
+      console.error(err)
+    })
+  }
+
+  const deleteHandler = () => {
+    axios.delete('/donation/', {
+      InvestorUsername: 'investorsun',
+      ProjectID: props.project_id,
+      Amount: amount,
+      Message: message
+    })
+    .then(() => handleClose())
+    .catch(err => {
+      handleClose()
+      console.error(err)
+    })
+  }
+
+  const messageHandler = (e) => {
+    const val = e.target.value;
+    setMessage(val);
+  }
+
+  const amountHandler = (e) => {
+    const val = e.target.value;
+    setAmount(val);
+  }
   const classes = useStyles();
   return (
     <Card
@@ -87,7 +126,7 @@ const Store = props => {
         </div>
       </CardContent>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title"><h1> Donation towards '{props.title}'</h1></DialogTitle>
+        <DialogTitle id="form-dialog-title">Donation towards '{props.title}'</DialogTitle>
         <DialogContent justify="center">
           <DialogContentText align="center">
             {props.description}
@@ -100,6 +139,7 @@ const Store = props => {
             variant="outlined"
             height="200px"
             multiline={true}
+            onChange={messageHandler}
             fullWidth
           />
           <TextField
@@ -108,6 +148,7 @@ const Store = props => {
             id="donation"
             label="Donation amount"
             type="number"
+            onChange={amountHandler}
             fullWidth
           />
         </DialogContent>
@@ -115,7 +156,7 @@ const Store = props => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={donateHandler} color="primary">
             Donate
           </Button>
         </DialogActions>

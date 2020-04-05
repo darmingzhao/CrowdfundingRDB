@@ -10,15 +10,28 @@ def delete_organizer():
 
     res_query = 'SELECT * FROM OrganizerInfo'
     before = query_db(res_query)
-
-    delete_query = 'DELETE \
-      FROM OrganizerInfo\
-      WHERE OrganizerEmail = ?'
+    print(email)
+    delete_message_query = """
+      DELETE
+      FROM Message
+      WHERE OrganizerEmail = ?;"""
+    args = [email]
+    delete_project_query = """
+      DELETE
+      FROM Project
+      WHERE OrganizerEmail = ?;"""
+    args = [email]
+    delete_organizer_query = """
+      DELETE
+      FROM OrganizerInfo
+      WHERE OrganizerEmail = ?;"""
     args = [email]
 
     try:
-        query_db(delete_query, args)
-    except:
+        query_db(delete_message_query, args)
+        query_db(delete_project_query, args)
+    except Exception as e:
+        print(str(e))
         abort(400)
 
     after = query_db(res_query)
@@ -31,14 +44,14 @@ def delete_organizer():
 # Projection Operation
 @api.route('/organizer/details', methods=['GET'])
 def get_organizer_details():
-    select = request.get_json()['Select']
-
+    select = request.args.get('Select')
+    print(select)
     query = None
-    if select == 'OrganizerEmail':
+    if select == 'email':
         query = 'SELECT OrganizerEmail FROM OrganizerInfo'
-    elif select == 'Name':
+    elif select == 'name':
         query = 'SELECT Name FROM OrganizerInfo'
-    elif select == 'Phone':
+    elif select == 'phone':
         query = 'SELECT Phone FROM OrganizerInfo'
     else:
         abort(400, 'Invalid Selection')

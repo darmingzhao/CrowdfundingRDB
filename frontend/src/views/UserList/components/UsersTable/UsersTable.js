@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -17,7 +17,13 @@ import {
   TableRow,
   Typography,
   TablePagination,
-  Button
+  Button,
+  RadioGroup,
+  Radio,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  Grid
 } from '@material-ui/core';
 
 import { getInitials } from 'helpers';
@@ -43,12 +49,45 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, users, ...rest } = props;
+  const { className, ...rest } = props;
 
   const classes = useStyles();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const [radio, setRadio] = useState('email')
+  const [organizers, setOrganizers] = useState([]);
+  const [numOrganizers, setNumOrganizers] = useState(0);
+
+  useEffect(() => {
+    getOrganizers()
+    getNumOrganizers()
+  }, [radio, numOrganizers])
+
+  const getNumOrganizers = () => {
+    axios.get('/organizer')
+    .then((res) => {
+      console.log(res.data.organizers)
+      setNumOrganizers(res.data.organizers)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+  }
+
+  const getOrganizers = () => {
+    axios.get('/organizer/details', {
+      params: {
+        Select: radio
+      }
+    })
+    .then((res) => {
+      setOrganizers(res.data.details)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+  }
 
   const handlePageChange = (event, page) => {
     setPage(page);
@@ -58,52 +97,79 @@ const UsersTable = props => {
     setRowsPerPage(event.target.value);
   };
 
-  const deleteUser = email => {
-    axios.delete('/organizer/', {
-      OrganizerEmail: email
-    })
-    .catch(err => {
-      console.error(err)
-    })
+  const radioGroupHandler = (e) => {
+    const val = e.target.value;
+    setRadio(val)
   }
-
+  const onEmail = radio === 'email';
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
       <CardContent className={classes.content}>
+        <Grid container 
+              alignItems="center"
+              justify="center" 
+              spacing={1}>
+          <Grid item align="left" xs={8}>
+            <FormControl component="fieldset">
+              <RadioGroup row aria-label="position" name="position" defaultValue="email" onChange={radioGroupHandler}>
+                <FormControlLabel
+                  value="email"
+                  control={<Radio color="primary" />}
+                  label="Email"
+                  labelPlacement="top"
+                />
+                <FormControlLabel
+                  value="name"
+                  control={<Radio color="primary" />}
+                  label="Name"
+                  labelPlacement="top"
+                />
+                <FormControlLabel
+                  value="phone"
+                  control={<Radio color="primary" />}
+                  label="Phone"
+                  labelPlacement="top"
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid item align="left" xs={2} m={4} p={4}>
+            <Card><Typography>Organizers</Typography></Card>
+          </Grid>
+          <Grid item align="left" xs={2} m={4} p={4}>
+          <Card><Typography>Organizers</Typography></Card>
+          </Grid>
+        </Grid>
         <PerfectScrollbar>
           <div className={classes.inner}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Delete</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Role in Org.</TableCell>
+                  {(() => {
+                    if (radio === 'name') {
+                      return <TableCell align="center">Name</TableCell>
+                    }
+                    if (radio === 'email') {
+                      return <TableCell align="center">Email</TableCell>
+                    }
+                    if (radio === 'phone') {
+                      return <TableCell align="center">Phone</TableCell>
+                    }
+                  })()}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
+                {organizers.slice(0, rowsPerPage).map(organizer => (
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.email}
+                    key={organizer.OrganizerEmail || organizer.Name || organizer.Phone}
                   >
-                    <TableCell padding="checkbox">
-                      <Button color="secondary" onClick={deleteUser(user.email)}>
-                        Delete
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      {user.name}
-                    </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>
-                      {user.role}
+                    <TableCell align="center">
+                      {organizer.OrganizerEmail || organizer.Name || organizer.Phone}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -115,7 +181,7 @@ const UsersTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={organizers.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -128,8 +194,7 @@ const UsersTable = props => {
 };
 
 UsersTable.propTypes = {
-  className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  className: PropTypes.string
 };
 
 export default UsersTable;
