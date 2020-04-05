@@ -10,17 +10,6 @@ def delete_organizer():
 
     res_query = 'SELECT * FROM OrganizerInfo'
     before = query_db(res_query)
-    print(email)
-    delete_message_query = """
-      DELETE
-      FROM Message
-      WHERE OrganizerEmail = ?;"""
-    args = [email]
-    delete_project_query = """
-      DELETE
-      FROM Project
-      WHERE OrganizerEmail = ?;"""
-    args = [email]
     delete_organizer_query = """
       DELETE
       FROM OrganizerInfo
@@ -28,10 +17,8 @@ def delete_organizer():
     args = [email]
 
     try:
-        query_db(delete_message_query, args)
-        query_db(delete_project_query, args)
+        query_db(delete_organizer_query, args)
     except Exception as e:
-        print(str(e))
         abort(400)
 
     after = query_db(res_query)

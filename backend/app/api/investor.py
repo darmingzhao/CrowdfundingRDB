@@ -3,10 +3,28 @@ from ..db import query_db
 from . import api
 
 
+# Get Investors
+@api.route('/investor/', methods=['GET'])
+def get_all_investors():
+
+    query = 'SELECT InvestorUsername\
+      FROM Investor;'
+
+    try:
+      result = query_db(query)
+    except Exception as e:
+      print(str(e))
+      abort(400)
+
+    resp = jsonify({'Investors': result})
+    resp.status_code = 200
+
+    return resp
+
 # Join Operation
 @api.route('/investor/donations', methods=['GET'])
 def get_donated_projects():
-    username = request.get_json()['InvestorUsername']
+    username = request.args.get('InvestorUsername')
 
     query = 'SELECT P.Title \
       FROM Project P, Donation D \
@@ -44,8 +62,8 @@ def get_all_donated():
     query = 'SELECT I.InvestorUsername \
       FROM Investor I \
       WHERE NOT EXISTS( \
-	      SELECT P.ProjectID \
-        FROM Project P \
+	      SELECT O.ProjectID \
+        FROM OngoingProject O \
 	      EXCEPT \
 	      SELECT D.ProjectID \
 	      FROM Donation D \

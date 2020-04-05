@@ -9,7 +9,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Avatar,
   Table,
   TableBody,
   TableCell,
@@ -17,11 +16,9 @@ import {
   TableRow,
   Typography,
   TablePagination,
-  Button,
   RadioGroup,
   Radio,
   FormControl,
-  FormLabel,
   FormControlLabel,
   Grid
 } from '@material-ui/core';
@@ -58,17 +55,19 @@ const UsersTable = props => {
   const [radio, setRadio] = useState('email')
   const [organizers, setOrganizers] = useState([]);
   const [numOrganizers, setNumOrganizers] = useState(0);
+  const [topInvestor, setTopInvestor] = useState('');
+  const [topTotal, setTopTotal] = useState(0);
 
   useEffect(() => {
     getOrganizers()
     getNumOrganizers()
-  }, [radio, numOrganizers])
+    getTopInvestor()
+  }, [radio, numOrganizers, topInvestor, topTotal])
 
   const getNumOrganizers = () => {
     axios.get('/organizer')
     .then((res) => {
-      console.log(res.data.organizers)
-      setNumOrganizers(res.data.organizers)
+      setNumOrganizers(res.data.organizers.Count)
     })
     .catch(err => {
       console.error(err)
@@ -83,6 +82,17 @@ const UsersTable = props => {
     })
     .then((res) => {
       setOrganizers(res.data.details)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+  }
+
+  const getTopInvestor = () => {
+    axios.get('/investor/maximum')
+    .then((res) => {
+      setTopInvestor(res.data.TopDonation.InvestorUsername)
+      setTopTotal(res.data.TopDonation.Total)
     })
     .catch(err => {
       console.error(err)
@@ -112,7 +122,7 @@ const UsersTable = props => {
               alignItems="center"
               justify="center" 
               spacing={1}>
-          <Grid item align="left" xs={8}>
+          <Grid item align="left" xs={6}>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="email" onChange={radioGroupHandler}>
                 <FormControlLabel
@@ -136,11 +146,9 @@ const UsersTable = props => {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid item align="left" xs={2} m={4} p={4}>
-            <Card><Typography>Organizers</Typography></Card>
-          </Grid>
-          <Grid item align="left" xs={2} m={4} p={4}>
-          <Card><Typography>Organizers</Typography></Card>
+          <Grid xs={3}></Grid>
+          <Grid item align="center" xs={2} m={4}>
+            <Card alignItems="center"><Typography>Organizers: {numOrganizers}</Typography></Card>
           </Grid>
         </Grid>
         <PerfectScrollbar>
