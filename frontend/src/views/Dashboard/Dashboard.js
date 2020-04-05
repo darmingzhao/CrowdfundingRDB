@@ -28,8 +28,10 @@ const Dashboard = () => {
   const [numAddInvestors, addNumInvestors] = useState(0);
 
   const getProjects = function (numInvestors) {
-    axios.get('/project/ongoing', {
-      NumInvestors: numInvestors
+    axios.get('/project/ongoing',{
+      params: {
+        NumInvestors: numInvestors || 0
+      }
     })
     .then(res => {
       setData(res.data.projects)
@@ -38,30 +40,33 @@ const Dashboard = () => {
       console.error(err);
     })
   }
-  const updateProjects = function (numInvestors) {
+  const updateProjects = function () {
     axios.put('/project/ongoing', {
-      NumInvestors: numAddInvestors
-    })
-    .catch(err => {
+        NumInvestors: numAddInvestors
+    }).catch(err => {
       console.error(err);
     })
   }
-  useEffect(() => {
-    const stores = [{
-      name: "My store",
-      description: "my cool store"
-    },
-    {
-      name: "Cool store",
-      description: "my sick store"
-    },
-    {
-      name: "His store",
-      description: "his sick store"
-    }]
-    setData(stores, [])
-  }, [])
 
+  const handleSearch = function (e) {
+    e.persist();
+    getProjects(numInvestors)
+  }
+
+  const handleUpdate = function (e) {
+    e.persist();
+    updateProjects()
+  }
+
+  const handleSearchInput = function (e) {
+    const val = e.target.value
+    setNumInvestors(val)
+  }
+
+  const handleAddInput = function (e) {
+    const val = e.target.value
+    addNumInvestors(val)
+  }
   return (
     <div className={classes.root}>
       
@@ -82,12 +87,12 @@ const Dashboard = () => {
                 id="numInvestors"
                 label="Number of investors"
                 type="number"
-                onChange={val => { setNumInvestors(val)}}
+                onChange={handleSearchInput}
                 fullWidth
               />
               </Grid>
               <Grid item xs={2}>
-                <Button color="primary" onClick={getProjects(numInvestors)}>Search</Button>
+                <Button color="primary" onClick={handleSearch}>Search</Button>
               </Grid>
             </Grid>
           </Card>
@@ -105,11 +110,11 @@ const Dashboard = () => {
                 label="Update Number of Investors"
                 type="number"
                 fullWidth
-                onChange={val => { addNumInvestors(val)}}
+                onChange={handleAddInput}
               />
               </Grid>
               <Grid item xs={2}>
-              <Button color="primary" onClick={updateProjects(numInvestors)}>Update</Button>
+                <Button color="primary" onClick={handleUpdate}>Update</Button>
               </Grid>
             </Grid>
           </Card>
@@ -118,9 +123,9 @@ const Dashboard = () => {
             return (<Grid
               item
               lg={6}
-              key={store.name}
+              key={store.Title}
             >
-              <Store name={store.name} description={store.description} />
+              <Store title={store.Title} description={store.Description} goal={store.Goal} num_investors={store.NumInvestors} organizer_email={store.OrganizerEmail} />
             </Grid>)
           })}
       </Grid>

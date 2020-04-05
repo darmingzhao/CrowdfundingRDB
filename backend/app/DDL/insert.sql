@@ -35,7 +35,12 @@ VALUES ("a@gmail.com", "John Doe", "2508200139", "Marketer"),
 ("b@gmail.com", "Mark Doe", "2504121512", "Marketer"),
 ("c@gmail.com", "Cool Doe", "2504250229", "Owner"),
 ("d@gmail.com", "Bob Doe", "2507877952", "CEO"),
-("e@gmail.com", "Jake Doe", "2502400139", "Executive");
+("e@gmail.com", "Jake Doe", "2502400139", "Executive"),
+("f@gmail.com", "Steve Doe", "2508203249", "Marketer"),
+("g@gmail.com", "G Doe", "2509104812", "Marketer"),
+("h@gmail.com", "Man Doe", "2504092851", "Owner"),
+("i@gmail.com", "Woman Doe", "2506287462", "CEO"),
+("j@gmail.com", "Hello Doe", "2501039288", "Executive");
 
 /* InvestorPersonalInfo */
 
@@ -77,11 +82,11 @@ VALUES (1, "a@gmail.com", "Google Home V2", DATE(2), 10000, "A Google Home that 
 (3, "c@gmail.com", "Amazon Echo V2", DATE(2), 40000, "An Amazon Echo that prioritizes stealing private information over other features."),
 (4, "d@gmail.com", "Handleless Cup", DATE(2), 30000, "A cup that helps minimize the spreading of germs through physical contact."),
 (5, "e@gmail.com", "PencilMarker", DATE(2), 15000, "A whiteboard marker with an eraser on the back."),
-(6, "a@gmail.com", "Project for F", DATE(2), 24000, "A glorious fund for F's college tuition."),
-(7, "b@gmail.com", "Project for G", DATE(2), 48000, "A glorious fund for G's college tuition."),
-(8, "c@gmail.com", "Project for H", DATE(2), 120000, "A glorious fund for H's college tuition."),
-(9, "d@gmail.com", "Project for I", DATE(2), 160000, "A glorious fund for I's college tuition."),
-(10, "a@gmail.com", "Project for J", DATE(2), 180000, "A glorious fund for J's college tuition.");
+(6, "f@gmail.com", "Project for F", DATE(2), 24000, "A glorious fund for F's college tuition."),
+(7, "g@gmail.com", "Project for G", DATE(2), 48000, "A glorious fund for G's college tuition."),
+(8, "h@gmail.com", "Project for H", DATE(2), 120000, "A glorious fund for H's college tuition."),
+(9, "i@gmail.com", "Project for I", DATE(2), 160000, "A glorious fund for I's college tuition."),
+(10, "j@gmail.com", "Project for J", DATE(2), 180000, "A glorious fund for J's college tuition.");
 
 /* FinishedProject */
 
