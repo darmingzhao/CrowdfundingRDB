@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -51,20 +51,6 @@ const Store = props => {
 
   const donateHandler = () => {
     axios.post('/donation/', {
-      InvestorUsername: 'investorsun',
-      ProjectID: props.project_id,
-      Amount: amount,
-      Message: message
-    })
-    .then(() => handleClose())
-    .catch(err => {
-      handleClose()
-      console.error(err)
-    })
-  }
-
-  const deleteHandler = () => {
-    axios.delete('/donation/', {
       InvestorUsername: 'investorsun',
       ProjectID: props.project_id,
       Amount: amount,

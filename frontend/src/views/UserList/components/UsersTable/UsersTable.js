@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
@@ -22,8 +21,6 @@ import {
   FormControlLabel,
   Grid
 } from '@material-ui/core';
-
-import { getInitials } from 'helpers';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -99,7 +96,7 @@ const UsersTable = props => {
     })
   }
 
-  const handlePageChange = (event, page) => {
+  const handlePageChange = (page) => {
     setPage(page);
   };
 

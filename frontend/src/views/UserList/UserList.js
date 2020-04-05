@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import axios from 'axios'
 
 import { UsersTable } from './components';
 

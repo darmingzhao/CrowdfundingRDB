@@ -2,13 +2,12 @@ import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 
 import { RouteWithLayout } from './components';
-import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
+import { Main as MainLayout} from './layouts';
 
 import {
   Dashboard as DashboardView,
   UserList as UserListView,
   InvestorList as InvestorListView,
-  NotFound as NotFoundView
 } from './views';
 
 const Routes = () => {
@@ -37,13 +36,6 @@ const Routes = () => {
         layout={MainLayout}
         path="/investors"
       />
-      <RouteWithLayout
-        component={NotFoundView}
-        exact
-        layout={MinimalLayout}
-        path="/not-found"
-      />
-      <Redirect to="/not-found" />
     </Switch>
   );
 };
