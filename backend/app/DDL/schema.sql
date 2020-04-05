@@ -19,18 +19,19 @@ CREATE TABLE Organization(
   Description CHAR(300)
 );
 
-CREATE TABLE OrganizerInfo(
-  OrganizerEmail CHAR(30) PRIMARY KEY,
-  Name CHAR(20),
-  Phone CHAR(11),
-  Role CHAR(20)
-);
-
 CREATE TABLE OrganizerPhone(
   Phone CHAR(11) PRIMARY KEY,
   CompanyName CHAR(20),
   Address CHAR(30),
   FOREIGN KEY (CompanyName) REFERENCES Organization(CompanyName)
+);
+
+CREATE TABLE OrganizerInfo(
+  OrganizerEmail CHAR(30) PRIMARY KEY,
+  Name CHAR(20),
+  Phone CHAR(11),
+  Role CHAR(20),
+  FOREIGN KEY (Phone) REFERENCES OrganizerPhone(Phone)
 );
 
 CREATE TABLE InvestorPersonalInfo(

@@ -10,6 +10,19 @@ VALUES ("Google", "A large tech firm."),
 ("Microsoft", "Sells software."),
 ("UBC", "University of British Columbia");
 
+/* OrganizerPhone */
+
+INSERT INTO OrganizerPhone (
+    Phone,
+    CompanyName,
+    Address
+)
+VALUES ("2508200139", "Google", "1600 Amphitheatre Parkway, Mountain View, California, United States"),
+("2504121512", "Microsoft", "1950 Meadowvale Blvd. Mississauga, Ontario, Canada"),
+("2504250229", "Amazon", "510 W Georgia St #14, Vancouver, British Columbia, Canada"),
+("2507877952", "StartUp", "1000 Spooner Street, Quahog, Rhode Island, United States"),
+("2502400139", "UBC", "170-6371 Crescent Road Vancouver, BC Canada");
+
 /* OrganizerInfo */
 
 INSERT INTO OrganizerInfo (
@@ -23,19 +36,6 @@ VALUES ("a@gmail.com", "John Doe", "2508200139", "Marketer"),
 ("c@gmail.com", "Cool Doe", "2504250229", "Owner"),
 ("d@gmail.com", "Bob Doe", "2507877952", "CEO"),
 ("e@gmail.com", "Jake Doe", "2502400139", "Executive");
-
-/* OrganizerPhone */
-
-INSERT INTO OrganizerPhone (
-    Phone,
-    CompanyName,
-    Address
-)
-VALUES ("2508200139", "Google", "1600 Amphitheatre Parkway, Mountain View, California, United States"),
-("2504121512", "Microsoft", "1950 Meadowvale Blvd. Mississauga, Ontario, Canada"),
-("2504250229", "Amazon", "510 W Georgia St #14, Vancouver, British Columbia, Canada"),
-("2507877952", "StartUp", "1000 Spooner Street, Quahog, Rhode Island, United States"),
-("2502400139", "UBC", "170-6371 Crescent Road Vancouver, BC Canada");
 
 /* InvestorPersonalInfo */
 
