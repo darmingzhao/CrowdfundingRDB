@@ -14,7 +14,11 @@ import {
   InputLabel,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -34,6 +38,9 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     justifyContent: 'flex-end'
+  },
+  select: {
+    width: '50%'
   }
 }));
 
@@ -47,6 +54,15 @@ const InvestorsTable = props => {
   const [topInvestor, setTopInvestor] = useState('');
   const [starInvestors, setStarInvestors] = useState([]);
   const [topTotal, setTopTotal] = useState(0);
+  const [open, setOpen] = useState(false);
+  
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     getTopInvestor()
@@ -106,17 +122,34 @@ const InvestorsTable = props => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="num_organizers">
+        <DialogTitle id="num_organizers" align="center"><u><strong>Investors of All Projects</strong></u></DialogTitle>
+        <DialogContent justify="center">
+          <List dense={true}>
+              {starInvestors.map(investor => {
+                return (<ListItem alignItems="center">
+                  <ListItemText
+                    primary={investor.InvestorUsername}
+                  />
+                </ListItem>)
+              })}
+          </List>
+        </DialogContent>
+      </Dialog>
+      <Grid item xs={8}>
         <Card {...rest}
           className={clsx(classes.root, className)}>
           <Typography align="center" variant="h1">Top Invested Total(<b>{topInvestor}</b>): ${topTotal}</Typography>    
         </Card>
       </Grid>
+      <Grid item xs={4}>
+        <Card><Button onClick={handleClickOpen} fullWidth color="secondary">Get Investors of All Projects</Button></Card>
+      </Grid>
       <Grid item xs={3}>
         <Card {...rest}
           className={clsx(classes.root, className)}>
             <CardContent justify="center" align="center">
-              <FormControl className={classes.formControl}>
+              <FormControl>
                 <InputLabel id="investor">Select Investor</InputLabel>
                 <Select
                   labelId="investor"
@@ -144,7 +177,7 @@ const InvestorsTable = props => {
             <CardContent align="center" justify="center">
                 <Typography variant="h2">{(() => {
                 if (chosenInvestor !== 'Select Investor') {
-                  return `Projects donated to by ${chosenInvestor}`
+                  return `Project Donations From ${chosenInvestor}`
                 } else {
                   return 'Select Investor'
                 }
@@ -155,25 +188,6 @@ const InvestorsTable = props => {
                   return (<ListItem alignItems="center">
                     <ListItemText
                       primary={project.Title}
-                    />
-                  </ListItem>)
-                })}
-            </List>
-            </CardContent>
-          </Card>
-      </Grid>
-      <Grid item xs={3}>
-      </Grid>
-      <Grid item xs={9} alignItems="center">
-        <Card {...rest}
-          className={clsx(classes.root, className)}>
-            <CardContent align="center" justify="center">
-              <Typography variant="h2">Investors of All Projects</Typography>
-              <List dense={true}>
-                {starInvestors.map(investor => {
-                  return (<ListItem alignItems="center">
-                    <ListItemText
-                      primary={investor.InvestorUsername}
                     />
                   </ListItem>)
                 })}

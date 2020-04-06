@@ -13,13 +13,15 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
   TablePagination,
   RadioGroup,
   Radio,
   FormControl,
   FormControlLabel,
-  Grid
+  Grid,
+  Button,
+  Dialog,
+  DialogTitle
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -52,14 +54,20 @@ const UsersTable = props => {
   const [radio, setRadio] = useState('email')
   const [organizers, setOrganizers] = useState([]);
   const [numOrganizers, setNumOrganizers] = useState(0);
-  const [topInvestor, setTopInvestor] = useState('');
-  const [topTotal, setTopTotal] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     getOrganizers()
     getNumOrganizers()
-    getTopInvestor()
-  }, [radio, numOrganizers, topInvestor, topTotal])
+  }, [radio, numOrganizers, open])
 
   const getNumOrganizers = () => {
     axios.get('/organizer')
@@ -85,11 +93,11 @@ const UsersTable = props => {
     })
   }
 
-  const getTopInvestor = () => {
-    axios.get('/investor/maximum')
-    .then((res) => {
-      setTopInvestor(res.data.TopDonation.InvestorUsername)
-      setTopTotal(res.data.TopDonation.Total)
+  const deleteHandler = (email) => {
+    axios.delete('/organizer/', {
+      data: {
+        OrganizerEmail: email
+      }
     })
     .catch(err => {
       console.error(err)
@@ -108,7 +116,7 @@ const UsersTable = props => {
     const val = e.target.value;
     setRadio(val)
   }
-  const onEmail = radio === 'email';
+  const onEmail = radio === 'OrganizerEmail';
   return (
     <Card
       {...rest}
@@ -119,23 +127,23 @@ const UsersTable = props => {
               alignItems="center"
               justify="center" 
               spacing={1}>
-          <Grid item align="left" xs={6}>
+          <Grid item align="left" xs={3}>
             <FormControl component="fieldset">
               <RadioGroup row aria-label="position" name="position" defaultValue="email" onChange={radioGroupHandler}>
                 <FormControlLabel
-                  value="email"
+                  value="OrganizerEmail"
                   control={<Radio color="primary" />}
                   label="Email"
                   labelPlacement="top"
                 />
                 <FormControlLabel
-                  value="name"
+                  value="Name"
                   control={<Radio color="primary" />}
                   label="Name"
                   labelPlacement="top"
                 />
                 <FormControlLabel
-                  value="phone"
+                  value="Phone"
                   control={<Radio color="primary" />}
                   label="Phone"
                   labelPlacement="top"
@@ -143,9 +151,9 @@ const UsersTable = props => {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid xs={3}></Grid>
-          <Grid item align="center" xs={2} m={4}>
-            <Card alignItems="center"><Typography>Organizers: {numOrganizers}</Typography></Card>
+          <Grid xs={6}></Grid>
+          <Grid item align="center" xs={3} m={4}>
+            <Button color="secondary" onClick={handleClickOpen}>Get Num. Organizers</Button>
           </Grid>
         </Grid>
         <PerfectScrollbar>
@@ -153,15 +161,16 @@ const UsersTable = props => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="left">Delete</TableCell>
                   {(() => {
-                    if (radio === 'name') {
-                      return <TableCell align="center">Name</TableCell>
+                    if (radio === 'Name') {
+                      return <TableCell align="left">Name</TableCell>
                     }
-                    if (radio === 'email') {
-                      return <TableCell align="center">Email</TableCell>
+                    if (radio === 'OrganizerEmail') {
+                      return <TableCell align="left">Email</TableCell>
                     }
-                    if (radio === 'phone') {
-                      return <TableCell align="center">Phone</TableCell>
+                    if (radio === 'Phone') {
+                      return <TableCell align="left">Phone</TableCell>
                     }
                   })()}
                 </TableRow>
@@ -173,7 +182,10 @@ const UsersTable = props => {
                     hover
                     key={organizer.OrganizerEmail || organizer.Name || organizer.Phone}
                   >
-                    <TableCell align="center">
+                    <TableCell align="left">
+                      <Button color="primary" onClick={() => {deleteHandler(organizer.OrganizerEmail)}} disabled={!onEmail}>Delete</Button>
+                    </TableCell>
+                    <TableCell align="left">
                       {organizer.OrganizerEmail || organizer.Name || organizer.Phone}
                     </TableCell>
                   </TableRow>
@@ -182,6 +194,9 @@ const UsersTable = props => {
             </Table>
           </div>
         </PerfectScrollbar>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="num_organizers">
+          <DialogTitle id="num_organizers" align="center"><b>{numOrganizers}</b> Total Organizers</DialogTitle>
+        </Dialog>
       </CardContent>
       <CardActions className={classes.actions}>
         <TablePagination
