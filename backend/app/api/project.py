@@ -37,7 +37,7 @@ def get_ongoing_details():
     
     query = 'SELECT O.NumInvestors, O.ProjectID, P.OrganizerEmail, P.Title, P.Goal, P.Description \
       FROM OngoingProject O, Project P \
-      WHERE O.ProjectID = P.ProjectID AND O.NumInvestors >= + ?'
+      WHERE O.ProjectID = P.ProjectID AND O.NumInvestors >= ?'
     args = [num]
 
     try:

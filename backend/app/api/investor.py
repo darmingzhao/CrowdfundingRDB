@@ -9,7 +9,7 @@ from . import api
 @api.route('/investor/', methods=['GET'])
 def get_all_investors():
     query = 'SELECT InvestorUsername\
-      FROM Investor;'
+      FROM Investor'
 
     try:
       result = query_db(query)
