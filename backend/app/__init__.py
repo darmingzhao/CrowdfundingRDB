@@ -7,7 +7,7 @@ from . import db
 def create_app(config_name):
     app = Flask(__name__)
     app.config.update(dict(
-        DATABASE=os.path.join(app.instance_path, 'cpsc304.sqlite'),
+        DATABASE=os.path.join('cpsc304.sqlite'),
         SECRET_KEY='DEVKEY',
         USERNAME='admin',
         PASSWORD='default'
