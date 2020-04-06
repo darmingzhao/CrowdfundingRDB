@@ -1,3 +1,5 @@
+import traceback
+
 from flask import abort, jsonify, request
 from ..db import query_db
 from . import api
@@ -6,14 +8,13 @@ from . import api
 # Get Investors
 @api.route('/investor/', methods=['GET'])
 def get_all_investors():
-
     query = 'SELECT InvestorUsername\
       FROM Investor;'
 
     try:
       result = query_db(query)
-    except Exception as e:
-      print(str(e))
+    except Exception:
+      traceback.print_exc()
       abort(400)
 
     resp = jsonify({'Investors': result})
@@ -33,7 +34,8 @@ def get_donated_projects():
 
     try:
       result = query_db(query, args)
-    except:
+    except Exception:
+      traceback.print_exc()
       abort(400)
 
     resp = jsonify({'Projects': result})
