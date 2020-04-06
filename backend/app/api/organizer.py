@@ -34,7 +34,7 @@ def delete_organizer():
 # Projection Operation
 @api.route('/organizer/details', methods=['GET'])
 def get_organizer_details():
-    select = request.get_json()['Select']
+    select = request.args.get('Select')
 
     query = None
     if select == 'OrganizerEmail':

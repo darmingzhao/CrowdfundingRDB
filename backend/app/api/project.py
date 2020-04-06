@@ -33,7 +33,7 @@ def update_ongoing_project():
 # Selection Operation
 @api.route('/project/ongoing', methods=['GET'])
 def get_ongoing_details():
-    num = request.get_json()['NumInvestors']
+    num = request.args.get('NumInvestors')
     
     query = 'SELECT O.NumInvestors, O.ProjectID, P.OrganizerEmail, P.Title, P.Goal, P.Description \
       FROM OngoingProject O, Project P \

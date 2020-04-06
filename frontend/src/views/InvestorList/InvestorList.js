@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import { UsersTable } from './components';
+import { InvestorsTable } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -12,15 +12,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserList = () => {
+const InvestorList = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <div className={classes.content}>
-        <UsersTable users={[]} />
+        <InvestorsTable/>
       </div>
     </div>
   );
 };
 
-export default UserList;
+export default InvestorList;

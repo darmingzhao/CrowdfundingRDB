@@ -11,7 +11,7 @@
 source venv/bin/activate
 ```
 
-### Initialize Database
+### Initialize database
 ```
 flask init-db
 ```
@@ -26,4 +26,3 @@ flask run
 ```
 deactivate
 ```
-

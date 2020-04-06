@@ -2,12 +2,12 @@ import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 
 import { RouteWithLayout } from './components';
-import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
+import { Main as MainLayout} from './layouts';
 
 import {
   Dashboard as DashboardView,
   UserList as UserListView,
-  NotFound as NotFoundView
+  InvestorList as InvestorListView,
 } from './views';
 
 const Routes = () => {
@@ -16,27 +16,26 @@ const Routes = () => {
       <Redirect
         exact
         from="/"
-        to="/dashboard"
+        to="/projects"
       />
       <RouteWithLayout
         component={DashboardView}
         exact
         layout={MainLayout}
-        path="/dashboard"
+        path="/projects"
       />
       <RouteWithLayout
         component={UserListView}
         exact
         layout={MainLayout}
-        path="/users"
+        path="/organizers"
       />
       <RouteWithLayout
-        component={NotFoundView}
+        component={InvestorListView}
         exact
-        layout={MinimalLayout}
-        path="/not-found"
+        layout={MainLayout}
+        path="/investors"
       />
-      <Redirect to="/not-found" />
     </Switch>
   );
 };

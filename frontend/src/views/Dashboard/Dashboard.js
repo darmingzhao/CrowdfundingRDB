@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Card, TextField, Button } from '@material-ui/core';
@@ -6,7 +6,6 @@ import { Grid, Card, TextField, Button } from '@material-ui/core';
 import {
   Store
 } from './components';
-import { flexbox } from '@material-ui/system';
 
 const useStyles = makeStyles(theme => ({
   root: {
